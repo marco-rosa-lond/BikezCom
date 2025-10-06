@@ -34,5 +34,6 @@ def execute_query(query, params=None, commit=False):
     """Quick helper for SELECT or DML operations."""
     with get_cursor(commit=commit) as cursor:
         cursor.execute(query, params or ())
-        if not commit:
-            return cursor.fetchall()
+        # if not commit:
+        #     return cursor.fetchall()
+        return cursor
