@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import re
-
+from db.connection import execute_query
 # Base URL listing motorcycle model years
 YEARS_LIST_URL = "https://bikez.com/years/index.php"
 
@@ -15,6 +15,24 @@ def get_html(url):
     soup = BeautifulSoup(resp.text, "html.parser")
     print(f"✅ Loaded: {resp.url} | Title: {soup.title.string.strip() if soup.title else 'No title'}")
     return soup
+
+
+
+
+def insert_motorcycle(motorcycle):
+    year = motorcycle["year"]
+    model = motorcycle["model_name"]
+    model_url = motorcycle["model_url"]
+    rating_url = motorcycle["rating_url"]
+
+    sql = """
+        IF NOT EXISTS (SELECT 1 FROM dbo.MotorcycleModels WHERE model_url = ?)
+        INSERT INTO dbo.MotorcycleModels (year, model_name, model_url, model_rating_url) VALUES (?, ?, ?, ?)
+        """
+
+    execute_query(sql, (model_url, year, model, model_url, rating_url), commit=True)
+    print("Inserted new motorcycle", model_url)
+
 
 
 def navigate_motorcycle_models_by_year():
@@ -73,7 +91,7 @@ def navigate_motorcycle_models_by_year():
             if rating_link:
                 motorcycle["rating_url"] = urljoin(url, rating_link["href"])
 
-            print(motorcycle)
+            insert_motorcycle(motorcycle)
 
 
 # Run the scraper
