@@ -3,6 +3,9 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import re
 from db.connection import execute_query
+
+
+
 # Base URL listing motorcycle model years
 YEARS_LIST_URL = "https://bikez.com/years/index.php"
 
