@@ -29,8 +29,8 @@ def insert_motorcycle(motorcycle):
     rating_url = motorcycle["rating_url"]
 
     sql = """
-        IF NOT EXISTS (SELECT 1 FROM dbo.MotorcycleModels WHERE model_url = ?)
-        INSERT INTO dbo.MotorcycleModels (year, model_name, model_url, model_rating_url) VALUES (?, ?, ?, ?)
+        IF NOT EXISTS (SELECT 1 FROM dbo.MotorcycleModels WHERE spec_url = ?)
+        INSERT INTO dbo.MotorcycleModels (year, model_name, spec_url, rating_url) VALUES (?, ?, ?, ?)
         """
 
     execute_query(sql, (model_url, year, model, model_url, rating_url), commit=True)
