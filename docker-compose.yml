@@ -1,0 +1,42 @@
+
+services:
+  model_crawler:
+    build: ./crawler
+    container_name: bikezcom_model_crawler
+    environment:
+      - DB_AUTH=${DB_AUTH}
+      - DB_SERVER=${DB_SERVER}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+    command: [ "python","-u","/app/app.py","crawl","--models" ]
+    restart: "no"
+
+  brand_crawler:
+    build: ./crawler
+    container_name: bikezcom_brand_crawler
+    environment:
+      - DB_AUTH=${DB_AUTH}
+      - DB_SERVER=${DB_SERVER}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+    command: ["python","-u","/app/app.py","crawl", "--brands"]
+    restart: "no"
+
+  specs_scraper:
+    build: ./scraper
+    environment:
+      - DB_AUTH=${DB_AUTH}
+      - DB_SERVER=${DB_SERVER}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+    command: ["python","-u","/app/app.py","scrape"]
+    deploy:
+      replicas: 3
+    restart: unless-stopped
+
